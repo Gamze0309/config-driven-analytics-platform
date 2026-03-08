@@ -1,7 +1,12 @@
 import "./App.css";
+import SchemaSelector from "./components/SchemaSelector";
 
 function App() {
-  return <></>;
+  return (
+    <>
+      <SchemaSelector />
+    </>
+  );
 }
 
 export default App;
