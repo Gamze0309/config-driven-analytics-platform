@@ -5,7 +5,11 @@ import {
 } from "../schema/predefined";
 import type { ObjectSchema } from "../types/field";
 
-const SchemaSelector = () => {
+interface SchemaSelectorProps {
+  onSelect?: (schemaKey: PredefinedSchemaKey) => void;
+}
+
+const SchemaSelector = ({ onSelect }: SchemaSelectorProps) => {
   const [selectedSchema, setSelectedSchema] =
     useState<PredefinedSchemaKey>("userProfile");
   const [schema, setSchema] = useState<ObjectSchema>(
@@ -15,6 +19,7 @@ const SchemaSelector = () => {
   const handleSchemaSelect = (schemaKey: PredefinedSchemaKey) => {
     setSelectedSchema(schemaKey);
     setSchema(PREDEFINED_SCHEMAS[schemaKey]);
+    onSelect?.(schemaKey);
     console.log("Selected schema:", schemaKey);
   };
 
