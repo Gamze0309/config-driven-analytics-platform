@@ -6,16 +6,16 @@ import TypePreview from "./components/TypePreview";
 import SubmitResult from "./components/SubmitResult";
 import {
   PREDEFINED_SCHEMAS,
+  createSubmissionState,
   type PredefinedSchemaKey,
+  type PredefinedSubmissionState,
 } from "./schema/predefined";
 
 function App() {
   const [selectedSchemaKey, setSelectedSchemaKey] =
     useState<PredefinedSchemaKey>("userProfile");
-  const [lastSubmitted, setLastSubmitted] = useState<Record<
-    string,
-    unknown
-  > | null>(null);
+  const [lastSubmitted, setLastSubmitted] =
+    useState<PredefinedSubmissionState | null>(null);
   const selectedSchema = PREDEFINED_SCHEMAS[selectedSchemaKey];
 
   return (
@@ -36,14 +36,12 @@ function App() {
             key={selectedSchemaKey}
             schema={selectedSchema}
             onSubmit={(values) => {
-              console.log("✅ Form submitted with type-safe values:", values);
-              setLastSubmitted(values as Record<string, unknown>);
+              setLastSubmitted(
+                createSubmissionState(selectedSchemaKey, values),
+              );
             }}
           />
-          <SubmitResult
-            lastSubmitted={lastSubmitted}
-            schemaKey={selectedSchemaKey}
-          />
+          <SubmitResult lastSubmitted={lastSubmitted} />
         </div>
 
         <div className="panel right-panel">

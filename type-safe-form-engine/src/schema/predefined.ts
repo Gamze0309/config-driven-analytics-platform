@@ -40,3 +40,25 @@ export type PredefinedSchemaKey = keyof typeof PREDEFINED_SCHEMAS;
 export type PredefinedSchemaTypes = {
   [K in PredefinedSchemaKey]: InferSchema<(typeof PREDEFINED_SCHEMAS)[K]>;
 };
+
+export type PredefinedSubmissionState = {
+  [K in PredefinedSchemaKey]: {
+    schemaKey: K;
+    values: PredefinedSchemaTypes[K];
+  };
+}[PredefinedSchemaKey];
+
+type SubmissionStateFor<K extends PredefinedSchemaKey> = Extract<
+  PredefinedSubmissionState,
+  { schemaKey: K }
+>;
+
+export const createSubmissionState = <K extends PredefinedSchemaKey>(
+  schemaKey: K,
+  values: PredefinedSchemaTypes[K],
+): SubmissionStateFor<K> => {
+  return {
+    schemaKey,
+    values,
+  } as SubmissionStateFor<K>;
+};

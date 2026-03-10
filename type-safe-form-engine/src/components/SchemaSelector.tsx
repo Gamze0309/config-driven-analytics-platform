@@ -3,7 +3,6 @@ import {
   PREDEFINED_SCHEMAS,
   type PredefinedSchemaKey,
 } from "../schema/predefined";
-import type { ObjectSchema } from "../types/field";
 
 interface SchemaSelectorProps {
   onSelect?: (schemaKey: PredefinedSchemaKey) => void;
@@ -12,15 +11,11 @@ interface SchemaSelectorProps {
 const SchemaSelector = ({ onSelect }: SchemaSelectorProps) => {
   const [selectedSchema, setSelectedSchema] =
     useState<PredefinedSchemaKey>("userProfile");
-  const [schema, setSchema] = useState<ObjectSchema>(
-    PREDEFINED_SCHEMAS[selectedSchema],
-  );
+  const schema = PREDEFINED_SCHEMAS[selectedSchema];
 
   const handleSchemaSelect = (schemaKey: PredefinedSchemaKey) => {
     setSelectedSchema(schemaKey);
-    setSchema(PREDEFINED_SCHEMAS[schemaKey]);
     onSelect?.(schemaKey);
-    console.log("Selected schema:", schemaKey);
   };
 
   return (
@@ -28,18 +23,21 @@ const SchemaSelector = ({ onSelect }: SchemaSelectorProps) => {
       <h3>Select a Schema:</h3>
       <div className="schema-buttons">
         <button
+          type="button"
           className={selectedSchema === "userProfile" ? "active" : ""}
           onClick={() => handleSchemaSelect("userProfile")}
         >
           User Profile
         </button>
         <button
+          type="button"
           className={selectedSchema === "contact" ? "active" : ""}
           onClick={() => handleSchemaSelect("contact")}
         >
           Contact Form
         </button>
         <button
+          type="button"
           className={selectedSchema === "product" ? "active" : ""}
           onClick={() => handleSchemaSelect("product")}
         >

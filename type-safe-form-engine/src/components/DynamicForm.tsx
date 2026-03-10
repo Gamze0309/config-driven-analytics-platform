@@ -1,37 +1,23 @@
 import type { ObjectSchema, InferSchema } from "../types/field";
-import type { StringField, NumberField, BooleanField } from "../types/field";
 import { useFormState } from "../hooks/useFormState";
+import { isBasicField } from "../utils/schemaGuards";
 import DynamicField from "./DynamicField";
-
-type BasicFieldType = StringField | NumberField | BooleanField;
 
 interface DynamicFormProps<T extends ObjectSchema> {
   schema: T;
   onSubmit?: (values: InferSchema<T>) => void;
 }
 
-const isBasicField = (field: any): field is BasicFieldType => {
-  return (
-    field.type === "string" ||
-    field.type === "number" ||
-    field.type === "boolean"
-  );
-};
-
 const DynamicForm = <T extends ObjectSchema>({
   schema,
   onSubmit,
 }: DynamicFormProps<T>) => {
-  // Use the custom hook for all form state management
   const { values, handleChange, handleSubmit } = useFormState(schema);
 
   return (
     <form
       onSubmit={handleSubmit((submittedValues) => {
-        if (onSubmit) {
-          onSubmit(submittedValues);
-        }
-        console.log("Form submitted with values:", submittedValues);
+        onSubmit?.(submittedValues);
       })}
       className="dynamic-form"
     >

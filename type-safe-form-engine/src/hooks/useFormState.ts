@@ -1,39 +1,24 @@
 import { useState, useCallback } from "react";
 import type { ObjectSchema, InferSchema } from "../types/field";
-import type { StringField, NumberField, BooleanField } from "../types/field";
-
-type BasicFieldType = StringField | NumberField | BooleanField;
+import { isBasicField } from "../utils/schemaGuards";
 
 interface UseFormStateReturn<T extends ObjectSchema> {
   values: InferSchema<T>;
-  errors: Record<string, string>;
-  touched: Record<string, boolean>;
   handleChange: (
     fieldName: string,
     fieldValue: string | number | boolean,
   ) => void;
-  handleBlur: (fieldName: string) => void;
   handleSubmit: (
     onSubmit: (values: InferSchema<T>) => void,
   ) => (e: React.SyntheticEvent<HTMLFormElement>) => void;
-  reset: () => void;
-  setValues: (values: InferSchema<T>) => void;
 }
-
-const isBasicField = (field: any): field is BasicFieldType => {
-  return (
-    field.type === "string" ||
-    field.type === "number" ||
-    field.type === "boolean"
-  );
-};
 
 /**
  * useFormState Hook
  * Manages form state with full type safety
  *
  * @param schema - The form schema
- * @returns Form state and handlers (values, errors, touched, handleChange, handleBlur, handleSubmit, reset)
+ * @returns Form state and handlers (values, handleChange, handleSubmit)
  *
  * @example
  * const { values, handleChange, handleSubmit } = useFormState(userProfileSchema);
@@ -52,7 +37,7 @@ export const useFormState = <T extends ObjectSchema>(
           values[key] = "";
           break;
         case "number":
-          values[key] = 0;
+          values[key] = "";
           break;
         case "boolean":
           values[key] = false;
@@ -63,8 +48,6 @@ export const useFormState = <T extends ObjectSchema>(
   }, [schema]);
 
   const [values, setValues] = useState<InferSchema<T>>(initializeValues());
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   const handleChange = useCallback(
     (fieldName: string, fieldValue: string | number | boolean) => {
@@ -76,13 +59,6 @@ export const useFormState = <T extends ObjectSchema>(
     [],
   );
 
-  const handleBlur = useCallback((fieldName: string) => {
-    setTouched((prev) => ({
-      ...prev,
-      [fieldName]: true,
-    }));
-  }, []);
-
   const handleSubmit = useCallback(
     (onSubmit: (values: InferSchema<T>) => void) =>
       (e: React.SyntheticEvent<HTMLFormElement>) => {
@@ -92,20 +68,9 @@ export const useFormState = <T extends ObjectSchema>(
     [values],
   );
 
-  const reset = useCallback(() => {
-    setValues(initializeValues());
-    setErrors({});
-    setTouched({});
-  }, [initializeValues]);
-
   return {
     values,
-    errors,
-    touched,
     handleChange,
-    handleBlur,
     handleSubmit,
-    reset,
-    setValues,
   };
 };

@@ -1,11 +1,11 @@
 import type { FC } from "react";
+import type { PredefinedSubmissionState } from "../schema/predefined";
 
 interface SubmitResultProps {
-  lastSubmitted: Record<string, unknown> | null;
-  schemaKey: string;
+  lastSubmitted: PredefinedSubmissionState | null;
 }
 
-const SubmitResult: FC<SubmitResultProps> = ({ lastSubmitted, schemaKey }) => {
+const SubmitResult: FC<SubmitResultProps> = ({ lastSubmitted }) => {
   if (!lastSubmitted) {
     return (
       <div className="submit-result">
@@ -22,10 +22,10 @@ const SubmitResult: FC<SubmitResultProps> = ({ lastSubmitted, schemaKey }) => {
       <h3>✅ Last Submitted Values</h3>
       <div className="result-info">
         <p className="schema-name">
-          Schema: <strong>{schemaKey}</strong>
+          Schema: <strong>{lastSubmitted.schemaKey}</strong>
         </p>
         <pre className="result-json">
-          <code>{JSON.stringify(lastSubmitted, null, 2)}</code>
+          <code>{JSON.stringify(lastSubmitted.values, null, 2)}</code>
         </pre>
       </div>
       <div className="type-info">

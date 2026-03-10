@@ -6,7 +6,7 @@ type FieldType = StringField | NumberField | BooleanField;
 interface DynamicFieldProps {
   field: FieldType;
   name: string;
-  value: string | number | boolean;
+  value: string | number | boolean | undefined;
   onChange: (value: string | number | boolean) => void;
 }
 
@@ -45,7 +45,7 @@ const DynamicField: FC<DynamicFieldProps> = ({
             id={name}
             type="text"
             name={name}
-            value={value as string}
+            value={(value as string | undefined) ?? ""}
             onChange={handleChange}
             required={isRequired}
             className="form-input"
@@ -64,7 +64,7 @@ const DynamicField: FC<DynamicFieldProps> = ({
             id={name}
             type="number"
             name={name}
-            value={value as number}
+            value={(value as number | undefined) ?? 0}
             onChange={handleChange}
             required={isRequired}
             className="form-input"
@@ -80,7 +80,7 @@ const DynamicField: FC<DynamicFieldProps> = ({
               id={name}
               type="checkbox"
               name={name}
-              checked={value as boolean}
+              checked={(value as boolean | undefined) ?? false}
               onChange={handleChange}
               required={isRequired}
               className="form-checkbox"
