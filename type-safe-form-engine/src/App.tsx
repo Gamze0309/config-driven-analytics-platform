@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import SchemaSelector from "./components/SchemaSelector";
 import DynamicForm from "./components/DynamicForm";
+import TypePreview from "./components/TypePreview";
 import {
   PREDEFINED_SCHEMAS,
   type PredefinedSchemaKey,
@@ -36,17 +37,7 @@ function App() {
         </div>
 
         <div className="panel right-panel">
-          <h2>Inferred Type</h2>
-          <div className="type-preview">
-            <pre>
-              <code>
-                {`type ${selectedSchemaKey} = {
-  // Inferred from schema
-  // (Task 3.3 coming soon)
-}`}
-              </code>
-            </pre>
-          </div>
+          <TypePreview schemaKey={selectedSchemaKey} />
         </div>
       </div>
     </div>

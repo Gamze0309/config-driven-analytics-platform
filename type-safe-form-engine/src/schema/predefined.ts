@@ -1,4 +1,4 @@
-import type { ObjectSchema } from "../types/field";
+import type { InferSchema, ObjectSchema } from "../types/field";
 
 export const userProfileSchema = {
   type: "object" as const,
@@ -36,3 +36,7 @@ export const PREDEFINED_SCHEMAS = {
 } as const;
 
 export type PredefinedSchemaKey = keyof typeof PREDEFINED_SCHEMAS;
+
+export type PredefinedSchemaTypes = {
+  [K in PredefinedSchemaKey]: InferSchema<(typeof PREDEFINED_SCHEMAS)[K]>;
+};
