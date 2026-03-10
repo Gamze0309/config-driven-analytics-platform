@@ -52,7 +52,7 @@ export const useFormState = <T extends ObjectSchema>(
           values[key] = "";
           break;
         case "number":
-          values[key] = "";
+          values[key] = 0;
           break;
         case "boolean":
           values[key] = false;

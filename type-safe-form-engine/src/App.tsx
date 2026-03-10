@@ -28,6 +28,7 @@ function App() {
         <div className="panel middle-panel">
           <h2>Generated Form</h2>
           <DynamicForm
+            key={selectedSchemaKey}
             schema={selectedSchema}
             onSubmit={(values) => {
               console.log("✅ Form submitted:", values);
