@@ -3,6 +3,7 @@ import "./App.css";
 import SchemaSelector from "./components/SchemaSelector";
 import DynamicForm from "./components/DynamicForm";
 import TypePreview from "./components/TypePreview";
+import SubmitResult from "./components/SubmitResult";
 import {
   PREDEFINED_SCHEMAS,
   type PredefinedSchemaKey,
@@ -11,6 +12,10 @@ import {
 function App() {
   const [selectedSchemaKey, setSelectedSchemaKey] =
     useState<PredefinedSchemaKey>("userProfile");
+  const [lastSubmitted, setLastSubmitted] = useState<Record<
+    string,
+    unknown
+  > | null>(null);
   const selectedSchema = PREDEFINED_SCHEMAS[selectedSchemaKey];
 
   return (
@@ -31,9 +36,13 @@ function App() {
             key={selectedSchemaKey}
             schema={selectedSchema}
             onSubmit={(values) => {
-              console.log("✅ Form submitted:", values);
-              alert(`Submitted: ${JSON.stringify(values, null, 2)}`);
+              console.log("✅ Form submitted with type-safe values:", values);
+              setLastSubmitted(values as Record<string, unknown>);
             }}
+          />
+          <SubmitResult
+            lastSubmitted={lastSubmitted}
+            schemaKey={selectedSchemaKey}
           />
         </div>
 
