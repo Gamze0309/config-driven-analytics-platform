@@ -1,12 +1,12 @@
 import { useState, useCallback } from "react";
-import type { ObjectSchema, InferSchema } from "../types/field";
-import { isBasicField } from "../utils/schemaGuards";
+import type { ObjectSchema, InferSchema, FieldSchema } from "../types/field";
+import { isBasicField, isObjectField } from "../utils/schemaGuards";
 
 interface UseFormStateReturn<T extends ObjectSchema> {
   values: InferSchema<T>;
   handleChange: (
     fieldName: string,
-    fieldValue: string | number | boolean,
+    fieldValue: string | number | boolean | Record<string, unknown>,
   ) => void;
   handleSubmit: (
     onSubmit: (values: InferSchema<T>) => void,
@@ -15,9 +15,9 @@ interface UseFormStateReturn<T extends ObjectSchema> {
 
 /**
  * useFormState Hook
- * Manages form state with full type safety
+ * Manages form state with full type safety, including nested objects
  *
- * @param schema - The form schema
+ * @param schema - The form schema (supports nested ObjectSchema fields)
  * @returns Form state and handlers (values, handleChange, handleSubmit)
  *
  * @example
@@ -28,29 +28,51 @@ export const useFormState = <T extends ObjectSchema>(
   schema: T,
 ): UseFormStateReturn<T> => {
   const initializeValues = useCallback((): InferSchema<T> => {
-    const values: Record<string, string | number | boolean> = {};
-    Object.entries(schema.fields).forEach(([key, field]) => {
-      if (!isBasicField(field)) return;
+    const values: Record<string, unknown> = {};
 
-      switch (field.type) {
-        case "string":
-          values[key] = "";
-          break;
-        case "number":
-          values[key] = "";
-          break;
-        case "boolean":
-          values[key] = false;
-          break;
+    const initializeField = (field: FieldSchema): unknown => {
+      if (isBasicField(field)) {
+        switch (field.type) {
+          case "string":
+            return "";
+          case "number":
+            return 0;
+          case "boolean":
+            return false;
+        }
       }
+
+      if (isObjectField(field)) {
+        return initializeNestedObject(field);
+      }
+
+      return undefined;
+    };
+
+    const initializeNestedObject = (
+      schema: ObjectSchema,
+    ): Record<string, unknown> => {
+      const nested: Record<string, unknown> = {};
+      Object.entries(schema.fields).forEach(([key, field]) => {
+        nested[key] = initializeField(field);
+      });
+      return nested;
+    };
+
+    Object.entries(schema.fields).forEach(([key, field]) => {
+      values[key] = initializeField(field);
     });
+
     return values as InferSchema<T>;
   }, [schema]);
 
   const [values, setValues] = useState<InferSchema<T>>(initializeValues());
 
   const handleChange = useCallback(
-    (fieldName: string, fieldValue: string | number | boolean) => {
+    (
+      fieldName: string,
+      fieldValue: string | number | boolean | Record<string, unknown>,
+    ) => {
       setValues((prev) => ({
         ...prev,
         [fieldName]: fieldValue,

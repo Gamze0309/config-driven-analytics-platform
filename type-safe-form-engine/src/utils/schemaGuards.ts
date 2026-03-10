@@ -2,6 +2,7 @@ import type {
   BooleanField,
   FieldSchema,
   NumberField,
+  ObjectSchema,
   StringField,
 } from "../types/field";
 
@@ -13,4 +14,8 @@ export const isBasicField = (field: FieldSchema): field is BasicFieldType => {
     field.type === "number" ||
     field.type === "boolean"
   );
+};
+
+export const isObjectField = (field: FieldSchema): field is ObjectSchema => {
+  return field.type === "object";
 };

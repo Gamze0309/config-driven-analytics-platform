@@ -43,6 +43,13 @@ const SchemaSelector = ({ onSelect }: SchemaSelectorProps) => {
         >
           Product
         </button>
+        <button
+          type="button"
+          className={selectedSchema === "userWithAddress" ? "active" : ""}
+          onClick={() => handleSchemaSelect("userWithAddress")}
+        >
+          User (with Address)
+        </button>
       </div>
 
       {schema && (

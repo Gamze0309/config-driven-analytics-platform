@@ -29,10 +29,31 @@ export const productSchema = {
   },
 } satisfies ObjectSchema;
 
+export const userWithAddressSchema = {
+  type: "object" as const,
+  fields: {
+    firstName: { type: "string" as const, required: true },
+    lastName: { type: "string" as const, required: true },
+    email: { type: "string" as const, required: true },
+    address: {
+      type: "object" as const,
+      required: true,
+      fields: {
+        street: { type: "string" as const, required: true },
+        city: { type: "string" as const, required: true },
+        zipCode: { type: "string" as const, required: true },
+        country: { type: "string" as const },
+      },
+    },
+    isActive: { type: "boolean" as const, required: true },
+  },
+} satisfies ObjectSchema;
+
 export const PREDEFINED_SCHEMAS = {
   userProfile: userProfileSchema,
   contact: contactFormSchema,
   product: productSchema,
+  userWithAddress: userWithAddressSchema,
 } as const;
 
 export type PredefinedSchemaKey = keyof typeof PREDEFINED_SCHEMAS;
