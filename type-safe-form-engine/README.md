@@ -1,73 +1,76 @@
-# React + TypeScript + Vite
+# Type-Safe Form Engine
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Dynamic JSON schema → React form with full TypeScript type inference.**
 
-Currently, two official plugins are available:
+Build type-safe forms directly from schema definitions. Form values are automatically typed at compile time with zero runtime assertions.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+- ✅ **Full type inference** — No manual typing needed
+- ✅ **Nested objects** — Recursive type support
+- ✅ **Auto-inferred validation** — From field metadata
+- ✅ **Conditional visibility** — Show/hide fields based on values
+- ✅ **Format validators** — Email, URL, date, custom patterns
+- ✅ **Advanced TypeScript** — Conditional types, discriminated unions, mapped types
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Quick Start
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Opens at `http://localhost:5173`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Example
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
+```typescript
+const userSchema = {
+  type: "object",
+  fields: {
+    name: { type: "string", required: true, minLength: 2 },
+    email: { type: "string", format: "email" },
+    age: { type: "number", min: 18, max: 120 },
   },
-])
+} as const;
+
+// Form values are automatically typed!
+<DynamicForm<typeof userSchema>
+  schema={userSchema}
+  onSubmit={(values) => {
+    // values: { name: string; email?: string; age?: number }
+  }}
+/>
 ```
+
+## TypeScript Patterns
+
+- Conditional types with recursive inference
+- Discriminated unions with exhaustive narrowing
+- Mapped types for metadata extraction
+- Generic constraints and type predicates
+- Recursive type operations
+
+## Project Structure
+
+```
+src/
+├── types/field.ts           # Type system & inference
+├── components/              # Form components
+├── hooks/                   # useFormState, useFormValidation
+├── utils/                   # Validators, guards, visibility
+└── schema/predefined.ts     # 5 example schemas
+```
+
+## Build & Commands
+
+```bash
+npm run build
+npm run lint
+```
+
+## Tech Stack
+
+- React 19.2 + TypeScript 5.9
+- Vite + ESLint
+- CSS Grid responsive layout
