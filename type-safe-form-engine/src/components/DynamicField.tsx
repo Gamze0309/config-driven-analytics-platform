@@ -1,5 +1,6 @@
 import { type FC, type ChangeEvent } from "react";
 import type { StringField, NumberField, BooleanField } from "../types/field";
+import { capitalize } from "../utils/format";
 
 type FieldType = StringField | NumberField | BooleanField;
 
@@ -21,7 +22,7 @@ const DynamicField: FC<DynamicFieldProps> = ({
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     switch (field.type) {
       case "number":
-        onChange(e.target.value ? Number(e.target.value) : "");
+        onChange(e.target.value ? Number(e.target.value) : 0);
         break;
       case "boolean":
         onChange(e.target.checked);
@@ -41,7 +42,7 @@ const DynamicField: FC<DynamicFieldProps> = ({
       return (
         <div className={`form-group ${hasError ? "has-error" : ""}`}>
           <label htmlFor={name}>
-            {name.charAt(0).toUpperCase() + name.slice(1)}
+            {capitalize(name)}
             {isRequired && <span className="required">*</span>}
           </label>
           <input
@@ -62,7 +63,7 @@ const DynamicField: FC<DynamicFieldProps> = ({
       return (
         <div className={`form-group ${hasError ? "has-error" : ""}`}>
           <label htmlFor={name}>
-            {name.charAt(0).toUpperCase() + name.slice(1)}
+            {capitalize(name)}
             {isRequired && <span className="required">*</span>}
           </label>
           <input
@@ -93,7 +94,7 @@ const DynamicField: FC<DynamicFieldProps> = ({
               className="form-checkbox"
               aria-invalid={hasError}
             />
-            {name.charAt(0).toUpperCase() + name.slice(1)}
+            {capitalize(name)}
             {isRequired && <span className="required">*</span>}
           </label>
           {hasError && <span className="form-error">{error}</span>}

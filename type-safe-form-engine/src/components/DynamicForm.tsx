@@ -2,7 +2,7 @@ import type { ObjectSchema, InferSchema } from "../types/field";
 import { useFormState } from "../hooks/useFormState";
 import { useFormValidation } from "../hooks/useFormValidation";
 import { isBasicField, isObjectField } from "../utils/schemaGuards";
-import { isFieldVisible } from "../utils/fieldVisibility";
+import { shouldRenderField } from "../utils/fieldVisibility";
 import DynamicField from "./DynamicField";
 import ObjectField from "./ObjectField";
 
@@ -33,14 +33,8 @@ const DynamicForm = <T extends ObjectSchema>({
     <form onSubmit={handleSubmit} className="dynamic-form">
       <div className="form-fields">
         {Object.entries(schema.fields).map(([fieldName, field]) => {
-          // Check visibility condition (only for basic fields)
           if (isBasicField(field)) {
-            const dependencyFieldName = field.visible?.fieldName;
-            if (
-              field.visible &&
-              dependencyFieldName &&
-              !isFieldVisible(field.visible, values[dependencyFieldName])
-            ) {
+            if (!shouldRenderField(field, values)) {
               return null;
             }
 

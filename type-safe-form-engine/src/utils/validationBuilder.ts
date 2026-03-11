@@ -164,21 +164,11 @@ const validateNumberField = (
 };
 
 const validateBooleanField = (
-  value: unknown,
-  field: BooleanField,
-  fieldName: string,
+  _value: unknown,
+  _field: BooleanField,
+  _fieldName: string,
 ): ValidationError[] => {
-  const errors: ValidationError[] = [];
-
-  if (field.required && value !== true && value !== false) {
-    errors.push({
-      field: fieldName,
-      message: `${fieldName} is required`,
-      code: "required",
-    });
-  }
-
-  return errors;
+  return [];
 };
 
 export const validateField = (

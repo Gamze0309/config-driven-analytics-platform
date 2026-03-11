@@ -1,7 +1,7 @@
 import type { FC } from "react";
 import type { ObjectSchema } from "../types/field";
 import { isBasicField, isObjectField } from "../utils/schemaGuards";
-import { isFieldVisible } from "../utils/fieldVisibility";
+import { shouldRenderField } from "../utils/fieldVisibility";
 import DynamicField from "./DynamicField";
 
 interface ObjectFieldProps {
@@ -34,12 +34,7 @@ const ObjectField: FC<ObjectFieldProps> = ({
           const currentValue = values[fieldName];
 
           if (isBasicField(field)) {
-            const dependencyFieldName = field.visible?.fieldName;
-            if (
-              field.visible &&
-              dependencyFieldName &&
-              !isFieldVisible(field.visible, values[dependencyFieldName])
-            ) {
+            if (!shouldRenderField(field, values)) {
               return null;
             }
 
