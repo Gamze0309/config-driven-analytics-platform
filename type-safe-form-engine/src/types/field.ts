@@ -1,3 +1,8 @@
+export type Condition = {
+  fieldName: string;
+  value: string | number | boolean;
+};
+
 export type StringField = {
   type: "string";
   required?: boolean;
@@ -5,6 +10,7 @@ export type StringField = {
   maxLength?: number;
   pattern?: string;
   format?: "email" | "url" | "date" | "time";
+  visible?: Condition;
 };
 
 export type NumberField = {
@@ -12,9 +18,14 @@ export type NumberField = {
   required?: boolean;
   min?: number;
   max?: number;
+  visible?: Condition;
 };
 
-export type BooleanField = { type: "boolean"; required?: boolean };
+export type BooleanField = {
+  type: "boolean";
+  required?: boolean;
+  visible?: Condition;
+};
 
 export type ObjectSchema = {
   type: "object";

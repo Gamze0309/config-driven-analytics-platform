@@ -105,11 +105,35 @@ export const userWithAddressSchema = {
   },
 } satisfies ObjectSchema;
 
+export const surveySchema = {
+  type: "object" as const,
+  fields: {
+    wouldRecommend: { type: "boolean" as const },
+    recommendation: {
+      type: "string" as const,
+      minLength: 10,
+      maxLength: 500,
+      visible: { fieldName: "wouldRecommend", value: true },
+    },
+    issueType: {
+      type: "string" as const,
+      visible: { fieldName: "wouldRecommend", value: false },
+    },
+    detailedFeedback: {
+      type: "string" as const,
+      minLength: 20,
+      maxLength: 1000,
+      visible: { fieldName: "issueType", value: "other" },
+    },
+  },
+} satisfies ObjectSchema;
+
 export const PREDEFINED_SCHEMAS = {
   userProfile: userProfileSchema,
   contact: contactFormSchema,
   product: productSchema,
   userWithAddress: userWithAddressSchema,
+  survey: surveySchema,
 } as const;
 
 export type PredefinedSchemaKey = keyof typeof PREDEFINED_SCHEMAS;
