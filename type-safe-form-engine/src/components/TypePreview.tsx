@@ -1,6 +1,7 @@
 import { type FC } from "react";
 import type { PredefinedSchemaKey } from "../schema/predefined";
 import { getPredefinedTypePreview } from "../utils/typeInference";
+import { getValidationRulesText } from "../utils/validationBuilder";
 
 interface TypePreviewProps {
   schemaKey: PredefinedSchemaKey;
@@ -8,6 +9,7 @@ interface TypePreviewProps {
 
 const TypePreview: FC<TypePreviewProps> = ({ schemaKey }) => {
   const { type, handler } = getPredefinedTypePreview(schemaKey);
+  const validationRules = getValidationRulesText(schemaKey);
 
   return (
     <div className="type-preview-wrapper">
@@ -26,12 +28,10 @@ const TypePreview: FC<TypePreviewProps> = ({ schemaKey }) => {
       </div>
 
       <div className="info-section">
-        <h3>ℹ️ Type Safety</h3>
-        <ul>
-          <li>✅ Inferred from schema at compile-time</li>
-          <li>✅ Required fields are mandatory</li>
-          <li>✅ Optional fields marked with ?</li>
-        </ul>
+        <h3>✓ Validation Rules</h3>
+        <pre className="validation-rules-text">
+          <code>{validationRules}</code>
+        </pre>
       </div>
     </div>
   );

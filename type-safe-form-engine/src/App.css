@@ -34,7 +34,7 @@
 
 .app-layout {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 1.1fr 1.8fr 1.1fr;
   gap: 1rem;
   flex: 1;
   padding: 1rem;
@@ -426,10 +426,43 @@
   font-weight: 500;
 }
 
+/* Form Validation Error Styles */
+.form-group.has-error {
+  border-color: #e74c3c;
+}
+
+.input-error {
+  border-color: #e74c3c !important;
+  background-color: #fef5f4;
+}
+
+.input-error:focus {
+  border-color: #e74c3c !important;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+.form-error {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/*Validation Rules*/
+.validation-rules-text {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #333;
+  margin: 0;
+  overflow-x: auto;
+  max-height: 200px;
+  padding: 0.75rem;
+}
+
 /* Responsive Design */
 @media (max-width: 1400px) {
   .app-layout {
-    grid-template-columns: 0.8fr 1.5fr 0.8fr;
+    grid-template-columns: 1fr 1.1fr 1fr;
   }
 }
 

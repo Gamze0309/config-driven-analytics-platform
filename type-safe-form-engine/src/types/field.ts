@@ -1,5 +1,19 @@
-export type StringField = { type: "string"; required?: boolean };
-export type NumberField = { type: "number"; required?: boolean };
+export type StringField = {
+  type: "string";
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  pattern?: string;
+  format?: "email" | "url" | "date" | "time";
+};
+
+export type NumberField = {
+  type: "number";
+  required?: boolean;
+  min?: number;
+  max?: number;
+};
+
 export type BooleanField = { type: "boolean"; required?: boolean };
 
 export type ObjectSchema = {

@@ -6,8 +6,9 @@ type FieldType = StringField | NumberField | BooleanField;
 interface DynamicFieldProps {
   field: FieldType;
   name: string;
-  value: string | number | boolean | undefined;
+  value: string | number | boolean;
   onChange: (value: string | number | boolean) => void;
+  error?: string;
 }
 
 const DynamicField: FC<DynamicFieldProps> = ({
@@ -15,6 +16,7 @@ const DynamicField: FC<DynamicFieldProps> = ({
   name,
   value,
   onChange,
+  error,
 }) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     switch (field.type) {
@@ -32,11 +34,12 @@ const DynamicField: FC<DynamicFieldProps> = ({
   };
 
   const isRequired = field.required || false;
+  const hasError = !!error;
 
   switch (field.type) {
     case "string":
       return (
-        <div className="form-group">
+        <div className={`form-group ${hasError ? "has-error" : ""}`}>
           <label htmlFor={name}>
             {name.charAt(0).toUpperCase() + name.slice(1)}
             {isRequired && <span className="required">*</span>}
@@ -45,17 +48,19 @@ const DynamicField: FC<DynamicFieldProps> = ({
             id={name}
             type="text"
             name={name}
-            value={(value as string | undefined) ?? ""}
+            value={value as string}
             onChange={handleChange}
             required={isRequired}
-            className="form-input"
+            className={`form-input ${hasError ? "input-error" : ""}`}
+            aria-invalid={hasError}
           />
+          {hasError && <span className="form-error">{error}</span>}
         </div>
       );
 
     case "number":
       return (
-        <div className="form-group">
+        <div className={`form-group ${hasError ? "has-error" : ""}`}>
           <label htmlFor={name}>
             {name.charAt(0).toUpperCase() + name.slice(1)}
             {isRequired && <span className="required">*</span>}
@@ -64,30 +69,34 @@ const DynamicField: FC<DynamicFieldProps> = ({
             id={name}
             type="number"
             name={name}
-            value={(value as number | undefined) ?? 0}
+            value={value as number}
             onChange={handleChange}
             required={isRequired}
-            className="form-input"
+            className={`form-input ${hasError ? "input-error" : ""}`}
+            aria-invalid={hasError}
           />
+          {hasError && <span className="form-error">{error}</span>}
         </div>
       );
 
     case "boolean":
       return (
-        <div className="form-group checkbox">
+        <div className={`form-group checkbox ${hasError ? "has-error" : ""}`}>
           <label htmlFor={name}>
             <input
               id={name}
               type="checkbox"
               name={name}
-              checked={(value as boolean | undefined) ?? false}
+              checked={value as boolean}
               onChange={handleChange}
               required={isRequired}
               className="form-checkbox"
+              aria-invalid={hasError}
             />
             {name.charAt(0).toUpperCase() + name.slice(1)}
             {isRequired && <span className="required">*</span>}
           </label>
+          {hasError && <span className="form-error">{error}</span>}
         </div>
       );
 

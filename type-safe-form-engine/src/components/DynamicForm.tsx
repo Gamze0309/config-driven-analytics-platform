@@ -1,5 +1,6 @@
 import type { ObjectSchema, InferSchema } from "../types/field";
 import { useFormState } from "../hooks/useFormState";
+import { useFormValidation } from "../hooks/useFormValidation";
 import { isBasicField, isObjectField } from "../utils/schemaGuards";
 import DynamicField from "./DynamicField";
 import ObjectField from "./ObjectField";
@@ -13,15 +14,22 @@ const DynamicForm = <T extends ObjectSchema>({
   schema,
   onSubmit,
 }: DynamicFormProps<T>) => {
-  const { values, handleChange, handleSubmit } = useFormState(schema);
+  const {
+    values,
+    handleChange,
+    handleSubmit: createHandleSubmit,
+  } = useFormState(schema);
+  const { errors, validate } = useFormValidation(schema, values);
+
+  const handleSubmit = createHandleSubmit((submittedValues) => {
+    if (!validate()) {
+      return;
+    }
+    onSubmit?.(submittedValues);
+  });
 
   return (
-    <form
-      onSubmit={handleSubmit((submittedValues) => {
-        onSubmit?.(submittedValues);
-      })}
-      className="dynamic-form"
-    >
+    <form onSubmit={handleSubmit} className="dynamic-form">
       <div className="form-fields">
         {Object.entries(schema.fields).map(([fieldName, field]) => {
           if (isBasicField(field)) {
@@ -30,24 +38,15 @@ const DynamicForm = <T extends ObjectSchema>({
                 key={fieldName}
                 field={field}
                 name={fieldName}
-                value={
-                  (values[fieldName] as
-                    | string
-                    | number
-                    | boolean
-                    | undefined) ?? ""
-                }
+                value={values[fieldName] as string | number | boolean}
                 onChange={(value) => handleChange(fieldName, value)}
+                error={errors[fieldName]}
               />
             );
           }
 
           if (isObjectField(field)) {
-            const nestedValues =
-              typeof values[fieldName] === "object" &&
-              values[fieldName] !== null
-                ? (values[fieldName] as Record<string, unknown>)
-                : {};
+            const nestedValues = values[fieldName] as Record<string, unknown>;
 
             return (
               <ObjectField
@@ -61,6 +60,7 @@ const DynamicForm = <T extends ObjectSchema>({
                   });
                 }}
                 name={fieldName}
+                errors={errors}
               />
             );
           }

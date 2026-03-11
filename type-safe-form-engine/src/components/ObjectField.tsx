@@ -8,6 +8,7 @@ interface ObjectFieldProps {
   values: Record<string, unknown>;
   onChange: (fieldName: string, value: unknown) => void;
   name?: string;
+  errors?: Record<string, string>;
 }
 
 const ObjectField: FC<ObjectFieldProps> = ({
@@ -15,8 +16,14 @@ const ObjectField: FC<ObjectFieldProps> = ({
   values,
   onChange,
   name,
+  errors = {},
 }) => {
   const nestingClass = name ? "nested-object-field" : "object-field";
+
+  const getFieldError = (fieldName: string): string | undefined => {
+    const fullPath = name ? `${name}.${fieldName}` : fieldName;
+    return errors[fullPath];
+  };
 
   return (
     <div className={nestingClass}>
@@ -31,19 +38,15 @@ const ObjectField: FC<ObjectFieldProps> = ({
                 key={fieldName}
                 field={field}
                 name={fieldName}
-                value={
-                  (currentValue as string | number | boolean | undefined) ?? ""
-                }
+                value={currentValue as string | number | boolean}
                 onChange={(value) => onChange(fieldName, value)}
+                error={getFieldError(fieldName)}
               />
             );
           }
 
           if (isObjectField(field)) {
-            const nestedValues =
-              typeof currentValue === "object" && currentValue !== null
-                ? (currentValue as Record<string, unknown>)
-                : {};
+            const nestedValues = currentValue as Record<string, unknown>;
 
             return (
               <ObjectField
@@ -57,6 +60,7 @@ const ObjectField: FC<ObjectFieldProps> = ({
                   });
                 }}
                 name={fieldName}
+                errors={errors}
               />
             );
           }
