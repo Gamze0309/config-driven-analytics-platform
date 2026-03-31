@@ -7,31 +7,29 @@ import { KpiPanel } from './components/KpiPanel'
 import { ListPanel } from './components/ListPanel'
 import { PageHeader } from './components/PageHeader'
 import type { RowItem } from './components/types'
+import { ALL_ITEMS } from './data/items'
 
 function App() {
   const [query, setQuery] = useState('')
 
-  const rows = useMemo<RowItem[]>(() => {
-    return Array.from({ length: 50 }, (_, i) => ({
-      id: `placeholder-${i}`,
-      label: `Row ${i}`,
-      value: (i * 73) % 1000,
-      group: i % 10,
-    }))
-  }, [])
+  const rows = useMemo<RowItem[]>(() => ALL_ITEMS, [])
+
+  const visibleRows = rows.filter((row) =>
+    row.label.toLowerCase().includes(query.toLowerCase()),
+  )
 
   return (
     <div className="page">
       <PageHeader
         title="React Rendering Internals"
-        subtitle="Step 2.1: Layout skeleton (Filter / KPI / Chart / List)"
+        subtitle="Step 2.2: Data generation (10,000 items)"
       />
 
       <main className="grid">
         <FilterPanel query={query} onQueryChange={setQuery} />
         <KpiPanel />
         <ChartPanel />
-        <ListPanel rows={rows} />
+        <ListPanel rows={visibleRows} />
       </main>
     </div>
   )

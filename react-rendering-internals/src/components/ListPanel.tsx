@@ -18,7 +18,7 @@ export function ListPanel({ rows }: ListPanelProps) {
           </div>
         ))}
       </div>
-      <p className="hint">Step 2.2 will replace these with 10,000 generated items.</p>
+      <p className="hint">Rendering {rows.length} rows (generated in-memory).</p>
     </section>
   )
 }
