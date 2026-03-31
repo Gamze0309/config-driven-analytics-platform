@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import './App.css'
 
 import { ChartPanel } from './components/ChartPanel'
@@ -11,6 +11,14 @@ import { ALL_ITEMS } from './data/items'
 function App() {
   const [query, setQuery] = useState('')
   const [selectedId, setSelectedId] = useState<string | null>(null)
+
+  const handleQueryChange = useCallback((value: string) => {
+    setQuery(value)
+  }, [])
+
+  const handleSelectRow = useCallback((id: string) => {
+    setSelectedId(id)
+  }, [])
 
   const visibleRows = useMemo(() => {
     const normalized = query.toLowerCase()
@@ -47,11 +55,11 @@ function App() {
     <div className="page">
       <PageHeader
         title="React Rendering Internals"
-        subtitle="Step 3.2: useMemo for derived computations"
+        subtitle="Step 3.3: useCallback for stable function props"
       />
 
       <main className="grid">
-        <FilterPanel query={query} onQueryChange={(value) => setQuery(value)} />
+        <FilterPanel query={query} onQueryChange={handleQueryChange} />
         <KpiPanel
           visible={kpis.visible}
           total={kpis.total}
@@ -62,7 +70,7 @@ function App() {
         <ListPanel
           rows={visibleRows}
           selectedId={selectedId}
-          onSelectRow={(id) => setSelectedId(id)}
+          onSelectRow={handleSelectRow}
         />
       </main>
     </div>
