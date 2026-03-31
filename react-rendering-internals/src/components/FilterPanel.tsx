@@ -1,9 +1,14 @@
+import { memo } from 'react'
+
 type FilterPanelProps = {
   query: string
   onQueryChange: (value: string) => void
 }
 
-export function FilterPanel({ query, onQueryChange }: FilterPanelProps) {
+export const FilterPanel = memo(function FilterPanel({
+  query,
+  onQueryChange,
+}: FilterPanelProps) {
   return (
     <section className="panel">
       <h2 className="panelTitle">Filter bar</h2>
@@ -19,4 +24,4 @@ export function FilterPanel({ query, onQueryChange }: FilterPanelProps) {
       <p className="hint">Current query: {query || '—'}</p>
     </section>
   )
-}
+})

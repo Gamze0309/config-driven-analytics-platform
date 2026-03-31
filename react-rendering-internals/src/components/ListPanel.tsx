@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import type { RowItem } from './types'
 import { expensiveLabelWork } from '../utils/expensive'
 
@@ -7,22 +8,42 @@ type ListPanelProps = {
   onSelectRow: (id: string) => void
 }
 
-export function ListPanel({ rows, selectedId, onSelectRow }: ListPanelProps) {
+type RowProps = {
+  row: RowItem
+  isSelected: boolean
+  onSelectRow: (id: string) => void
+}
+
+const Row = memo(function Row({ row, isSelected, onSelectRow }: RowProps) {
+  return (
+    <div
+      className={isSelected ? 'row selected' : 'row'}
+      onClick={() => onSelectRow(row.id)}
+    >
+      <div className="rowTitle">{expensiveLabelWork(row.label)}</div>
+      <div className="rowMeta">
+        value={row.value} group={row.group}
+      </div>
+    </div>
+  )
+})
+
+export const ListPanel = memo(function ListPanel({
+  rows,
+  selectedId,
+  onSelectRow,
+}: ListPanelProps) {
   return (
     <section className="panel listPanel">
       <h2 className="panelTitle">Large data list</h2>
       <div className="list">
         {rows.map((row) => (
-          <div
+          <Row
             key={row.id}
-            className={selectedId === row.id ? 'row selected' : 'row'}
-            onClick={() => onSelectRow(row.id)}
-          >
-            <div className="rowTitle">{expensiveLabelWork(row.label)}</div>
-            <div className="rowMeta">
-              value={row.value} group={row.group}
-            </div>
-          </div>
+            row={row}
+            isSelected={selectedId === row.id}
+            onSelectRow={onSelectRow}
+          />
         ))}
       </div>
       <p className="hint">
@@ -30,4 +51,4 @@ export function ListPanel({ rows, selectedId, onSelectRow }: ListPanelProps) {
       </p>
     </section>
   )
-}
+})

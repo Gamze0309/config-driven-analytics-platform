@@ -1,3 +1,5 @@
+import { memo } from 'react'
+
 type KpiPanelProps = {
   visible: number
   total: number
@@ -5,7 +7,12 @@ type KpiPanelProps = {
   selected: string
 }
 
-export function KpiPanel({ visible, total, max, selected }: KpiPanelProps) {
+export const KpiPanel = memo(function KpiPanel({
+  visible,
+  total,
+  max,
+  selected,
+}: KpiPanelProps) {
   return (
     <section className="panel">
       <h2 className="panelTitle">KPI cards</h2>
@@ -29,4 +36,4 @@ export function KpiPanel({ visible, total, max, selected }: KpiPanelProps) {
       </div>
     </section>
   )
-}
+})

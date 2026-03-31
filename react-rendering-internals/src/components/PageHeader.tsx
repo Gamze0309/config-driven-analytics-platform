@@ -1,9 +1,14 @@
+import { memo } from 'react'
+
 type PageHeaderProps = {
   title: string
   subtitle: string
 }
 
-export function PageHeader({ title, subtitle }: PageHeaderProps) {
+export const PageHeader = memo(function PageHeader({
+  title,
+  subtitle,
+}: PageHeaderProps) {
   return (
     <header className="header">
       <div>
@@ -12,4 +17,4 @@ export function PageHeader({ title, subtitle }: PageHeaderProps) {
       </div>
     </header>
   )
-}
+})

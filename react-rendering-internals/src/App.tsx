@@ -55,7 +55,7 @@ function App() {
     <div className="page">
       <PageHeader
         title="React Rendering Internals"
-        subtitle="Step 3.3: useCallback for stable function props"
+        subtitle="Step 3.4: React.memo for render skipping"
       />
 
       <main className="grid">
