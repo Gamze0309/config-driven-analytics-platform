@@ -12,9 +12,9 @@ export function ListPanel({ rows, selectedId, onSelectRow }: ListPanelProps) {
     <section className="panel listPanel">
       <h2 className="panelTitle">Large data list</h2>
       <div className="list">
-        {rows.map((row, index) => (
+        {rows.map((row) => (
           <div
-            key={index}
+            key={row.id}
             className={selectedId === row.id ? 'row selected' : 'row'}
             onClick={() => onSelectRow(row.id)}
           >
@@ -26,7 +26,7 @@ export function ListPanel({ rows, selectedId, onSelectRow }: ListPanelProps) {
         ))}
       </div>
       <p className="hint">
-        Baseline: inline click handler + unstable key (index). Rendering {rows.length} rows.
+        Step 3.1: stable key ({'row.id'}). Rendering {rows.length} rows.
       </p>
     </section>
   )

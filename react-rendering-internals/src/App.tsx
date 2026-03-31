@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import './App.css'
 
 import { ChartPanel } from './components/ChartPanel'
@@ -12,36 +12,50 @@ function App() {
   const [query, setQuery] = useState('')
   const [selectedId, setSelectedId] = useState<string | null>(null)
 
-  const visibleRows = ALL_ITEMS.filter((row) =>
-    row.label.toLowerCase().includes(query.toLowerCase()),
-  )
+  const visibleRows = useMemo(() => {
+    const normalized = query.toLowerCase()
+    return ALL_ITEMS.filter((row) =>
+      row.label.toLowerCase().includes(normalized),
+    )
+  }, [query])
 
-  let total = 0
-  let max = -Infinity
-  for (const row of visibleRows) {
-    total += row.value
-    if (row.value > max) max = row.value
-  }
-  if (visibleRows.length === 0) max = 0
+  const kpis = useMemo(() => {
+    let total = 0
+    let max = -Infinity
+    for (const row of visibleRows) {
+      total += row.value
+      if (row.value > max) max = row.value
+    }
+    if (visibleRows.length === 0) max = 0
 
-  const buckets = new Array<number>(10).fill(0)
-  for (const row of visibleRows) {
-    buckets[row.group]++
-  }
+    return {
+      total,
+      max,
+      visible: visibleRows.length,
+    }
+  }, [visibleRows])
+
+  const buckets = useMemo(() => {
+    const buckets = new Array<number>(10).fill(0)
+    for (const row of visibleRows) {
+      buckets[row.group]++
+    }
+    return buckets
+  }, [visibleRows])
 
   return (
     <div className="page">
       <PageHeader
         title="React Rendering Internals"
-        subtitle="Step 2.3: Baseline anti-patterns (re-render heavy)"
+        subtitle="Step 3.2: useMemo for derived computations"
       />
 
       <main className="grid">
         <FilterPanel query={query} onQueryChange={(value) => setQuery(value)} />
         <KpiPanel
-          visible={visibleRows.length}
-          total={total}
-          max={max}
+          visible={kpis.visible}
+          total={kpis.total}
+          max={kpis.max}
           selected={selectedId ?? '—'}
         />
         <ChartPanel buckets={buckets} />
