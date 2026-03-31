@@ -1,11 +1,10 @@
 import { memo } from 'react'
 import type { RowItem } from './types'
 import { expensiveLabelWork } from '../utils/expensive'
+import { useSelection } from '../context/SelectionContext'
 
 type ListPanelProps = {
   rows: RowItem[]
-  selectedId: string | null
-  onSelectRow: (id: string) => void
 }
 
 type RowProps = {
@@ -30,9 +29,9 @@ const Row = memo(function Row({ row, isSelected, onSelectRow }: RowProps) {
 
 export const ListPanel = memo(function ListPanel({
   rows,
-  selectedId,
-  onSelectRow,
 }: ListPanelProps) {
+  const { selectedId, selectById } = useSelection()
+
   return (
     <section className="panel listPanel">
       <h2 className="panelTitle">Large data list</h2>
@@ -42,7 +41,7 @@ export const ListPanel = memo(function ListPanel({
             key={row.id}
             row={row}
             isSelected={selectedId === row.id}
-            onSelectRow={onSelectRow}
+            onSelectRow={selectById}
           />
         ))}
       </div>

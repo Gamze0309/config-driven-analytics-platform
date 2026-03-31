@@ -1,14 +1,9 @@
 import { memo } from 'react'
+import { useFilter } from '../context/FilterContext'
 
-type FilterPanelProps = {
-  query: string
-  onQueryChange: (value: string) => void
-}
+export const FilterPanel = memo(function FilterPanel() {
+  const { query, setQuery } = useFilter()
 
-export const FilterPanel = memo(function FilterPanel({
-  query,
-  onQueryChange,
-}: FilterPanelProps) {
   return (
     <section className="panel">
       <h2 className="panelTitle">Filter bar</h2>
@@ -17,7 +12,7 @@ export const FilterPanel = memo(function FilterPanel({
         <input
           className="input"
           value={query}
-          onChange={(e) => onQueryChange(e.target.value)}
+          onChange={(e) => setQuery(e.target.value)}
           placeholder="Type here (profiling scenario will use 10 chars)"
         />
       </label>

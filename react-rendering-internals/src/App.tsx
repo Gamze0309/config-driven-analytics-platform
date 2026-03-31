@@ -6,6 +6,8 @@ import { FilterPanel } from './components/FilterPanel'
 import { KpiPanel } from './components/KpiPanel'
 import { ListPanel } from './components/ListPanel'
 import { PageHeader } from './components/PageHeader'
+import { FilterProvider } from './context/FilterContext'
+import { SelectionProvider } from './context/SelectionContext'
 import { ALL_ITEMS } from './data/items'
 
 function App() {
@@ -55,24 +57,19 @@ function App() {
     <div className="page">
       <PageHeader
         title="React Rendering Internals"
-        subtitle="Step 3.4: React.memo for render skipping"
+        subtitle="Step 3.5: Context partitioning by concern"
       />
 
-      <main className="grid">
-        <FilterPanel query={query} onQueryChange={handleQueryChange} />
-        <KpiPanel
-          visible={kpis.visible}
-          total={kpis.total}
-          max={kpis.max}
-          selected={selectedId ?? '—'}
-        />
-        <ChartPanel buckets={buckets} />
-        <ListPanel
-          rows={visibleRows}
-          selectedId={selectedId}
-          onSelectRow={handleSelectRow}
-        />
-      </main>
+      <FilterProvider query={query} setQuery={handleQueryChange}>
+        <SelectionProvider selectedId={selectedId} selectById={handleSelectRow}>
+          <main className="grid">
+            <FilterPanel />
+            <KpiPanel visible={kpis.visible} total={kpis.total} max={kpis.max} />
+            <ChartPanel buckets={buckets} />
+            <ListPanel rows={visibleRows} />
+          </main>
+        </SelectionProvider>
+      </FilterProvider>
     </div>
   )
 }

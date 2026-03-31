@@ -1,18 +1,19 @@
 import { memo } from 'react'
+import { useSelection } from '../context/SelectionContext'
 
 type KpiPanelProps = {
   visible: number
   total: number
   max: number
-  selected: string
 }
 
 export const KpiPanel = memo(function KpiPanel({
   visible,
   total,
   max,
-  selected,
 }: KpiPanelProps) {
+  const { selectedId } = useSelection()
+
   return (
     <section className="panel">
       <h2 className="panelTitle">KPI cards</h2>
@@ -31,7 +32,7 @@ export const KpiPanel = memo(function KpiPanel({
         </div>
         <div className="kpiCard">
           <div className="kpiLabel">Selected</div>
-          <div className="kpiValue">{selected}</div>
+          <div className="kpiValue">{selectedId ?? '—'}</div>
         </div>
       </div>
     </section>
