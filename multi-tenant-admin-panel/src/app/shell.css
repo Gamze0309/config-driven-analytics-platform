@@ -77,6 +77,13 @@
   color: var(--text-h);
 }
 
+.cardHeaderRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .kv {
   display: grid;
   gap: 10px;
@@ -96,4 +103,137 @@
 .kvVal {
   color: var(--text-h);
   font-size: 14px;
+}
+
+.flagsTable {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.flagsHeader,
+.flagsRow {
+  display: grid;
+  grid-template-columns: 2fr 0.8fr 0.8fr 0.9fr 1.2fr;
+  gap: 12px;
+  padding: 10px 12px;
+  align-items: center;
+}
+
+.flagsHeader {
+  background: color-mix(in srgb, var(--bg) 86%, var(--border));
+  font-size: 12px;
+  color: var(--text);
+}
+
+.flagsRow {
+  border-top: 1px solid var(--border);
+}
+
+.flagName {
+  color: var(--text-h);
+  font-size: 14px;
+}
+
+.flagKey {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+}
+
+.pillOn {
+  color: var(--text-h);
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+}
+
+.pillOff {
+  color: var(--text);
+  background: transparent;
+}
+
+.linkButton {
+  font: inherit;
+  color: var(--text-h);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.linkButton:hover {
+  box-shadow: var(--shadow);
+}
+
+.miniButton {
+  margin-left: 8px;
+  font: inherit;
+  font-size: 12px;
+  color: var(--text-h);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+.miniButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.switch input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.switchTrack {
+  width: 40px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 80%, var(--border));
+  position: relative;
+  cursor: pointer;
+}
+
+.switchTrack::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  transition: transform 160ms ease;
+}
+
+.switch input:checked + .switchTrack {
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+}
+
+.switch input:checked + .switchTrack::after {
+  transform: translateX(18px);
 }
