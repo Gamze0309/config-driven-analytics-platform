@@ -1,11 +1,10 @@
-import './App.css'
+import { AppShell } from './app/AppShell';
+import { AppProviders } from './app/providers/AppProviders';
 
-function App() {
-
+export default function App() {
   return (
-    <>
-    </>
-  )
+    <AppProviders>
+      <AppShell />
+    </AppProviders>
+  );
 }
-
-export default App
