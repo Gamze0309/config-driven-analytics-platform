@@ -18,7 +18,7 @@ export function HomePage() {
   const canReadFlags = role.permissions.includes('flags:read');
 
   return (
-    <>
+    <div className={canReadFlags ? 'homeGrid' : 'homeGrid homeGridSingle'}>
       <section className="card">
         <h2 className="cardTitle">Active Context</h2>
         <div className="kv">
@@ -75,6 +75,6 @@ export function HomePage() {
           </div>
         </section>
       ) : null}
-    </>
+    </div>
   );
 }

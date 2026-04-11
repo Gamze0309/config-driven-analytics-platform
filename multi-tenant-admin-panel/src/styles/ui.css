@@ -34,6 +34,7 @@
   display: grid;
   grid-template-columns: 140px 1fr;
   gap: 12px;
+  align-items: baseline;
 }
 
 .kvKey {
@@ -59,11 +60,6 @@
   gap: 12px;
   padding: 10px 12px;
   align-items: center;
-}
-
-.flagsTable.cols3 .flagsHeader,
-.flagsTable.cols3 .flagsRow {
-  grid-template-columns: 2fr 1fr 1fr;
 }
 
 .flagsTable.cols2 .flagsHeader,
@@ -203,4 +199,21 @@
 
 .switch input:checked + .switchTrack::after {
   transform: translateX(18px);
+}
+
+.homeGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.homeGridSingle {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 900px) {
+  .homeGrid {
+    grid-template-columns: 1fr;
+  }
 }
