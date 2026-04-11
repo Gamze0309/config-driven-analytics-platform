@@ -61,6 +61,16 @@
   align-items: center;
 }
 
+.flagsTable.cols3 .flagsHeader,
+.flagsTable.cols3 .flagsRow {
+  grid-template-columns: 2fr 1fr 1fr;
+}
+
+.flagsTable.cols4 .flagsHeader,
+.flagsTable.cols4 .flagsRow {
+  grid-template-columns: 2fr 0.8fr 1.2fr 0.9fr;
+}
+
 .flagsHeader {
   background: color-mix(in srgb, var(--bg) 86%, var(--border));
   font-size: 12px;

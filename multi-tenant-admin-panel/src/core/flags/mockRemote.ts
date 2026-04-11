@@ -1,4 +1,5 @@
 import type { FeatureFlags } from './types';
+import type { FeatureKey } from './types';
 
 export const REMOTE_FLAGS_BY_TENANT: Record<string, FeatureFlags> = {
   acme: { users: true, reports: true, billing: true, flagsAdmin: true },
@@ -8,4 +9,19 @@ export const REMOTE_FLAGS_BY_TENANT: Record<string, FeatureFlags> = {
 
 export async function fetchRemoteFlagsForTenant(tenantId: string): Promise<FeatureFlags | null> {
   return REMOTE_FLAGS_BY_TENANT[tenantId] ?? null;
+}
+
+export async function updateRemoteFlagForTenant(
+  tenantId: string,
+  key: FeatureKey,
+  value: boolean,
+): Promise<FeatureFlags> {
+  const current = REMOTE_FLAGS_BY_TENANT[tenantId];
+  if (!current) {
+    throw new Error(`Unknown tenantId: ${tenantId}`);
+  }
+
+  const next: FeatureFlags = { ...current, [key]: value };
+  REMOTE_FLAGS_BY_TENANT[tenantId] = next;
+  return next;
 }
