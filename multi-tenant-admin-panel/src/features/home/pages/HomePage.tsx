@@ -16,6 +16,9 @@ export function HomePage() {
   const { remoteFlags, localOverrides, effectiveFlags, setOverride, resetOverrides } =
     useFlags();
 
+  const canReadFlags = role.permissions.includes('flags:read');
+  const canWriteFlags = role.permissions.includes('flags:write');
+
   return (
     <>
       <section className="card">
@@ -42,65 +45,76 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="card">
-        <div className="cardHeaderRow">
-          <h2 className="cardTitle">Feature Flags</h2>
-          <button className="linkButton" type="button" onClick={resetOverrides}>
-            Reset overrides
-          </button>
-        </div>
-
-        <div className="flagsTable" role="table" aria-label="Feature flags">
-          <div className="flagsHeader" role="row">
-            <div role="columnheader">Feature</div>
-            <div role="columnheader">Remote</div>
-            <div role="columnheader">Override</div>
-            <div role="columnheader">Effective</div>
-            <div role="columnheader">Toggle</div>
+      {canReadFlags ? (
+        <section className="card">
+          <div className="cardHeaderRow">
+            <h2 className="cardTitle">Feature Flags</h2>
+            <button
+              className="linkButton"
+              type="button"
+              onClick={resetOverrides}
+              disabled={!canWriteFlags}
+            >
+              Reset overrides
+            </button>
           </div>
 
-          {(Object.keys(effectiveFlags) as FeatureKey[]).map((key) => {
-            const remote = remoteFlags[key];
-            const override = localOverrides[key];
-            const effective = effectiveFlags[key];
+          <div className="flagsTable" role="table" aria-label="Feature flags">
+            <div className="flagsHeader" role="row">
+              <div role="columnheader">Feature</div>
+              <div role="columnheader">Remote</div>
+              <div role="columnheader">Override</div>
+              <div role="columnheader">Effective</div>
+              <div role="columnheader">Toggle</div>
+            </div>
 
-            return (
-              <div className="flagsRow" role="row" key={key}>
-                <div role="cell">
-                  <div className="flagName">{FEATURE_LABELS[key]}</div>
-                  <div className="flagKey">{key}</div>
+            {(Object.keys(effectiveFlags) as FeatureKey[]).map((key) => {
+              const remote = remoteFlags[key];
+              const override = localOverrides[key];
+              const effective = effectiveFlags[key];
+
+              return (
+                <div className="flagsRow" role="row" key={key}>
+                  <div role="cell">
+                    <div className="flagName">{FEATURE_LABELS[key]}</div>
+                    <div className="flagKey">{key}</div>
+                  </div>
+                  <div role="cell">{String(remote)}</div>
+                  <div role="cell">{override === undefined ? '—' : String(override)}</div>
+                  <div role="cell">
+                    <span className={effective ? 'pill pillOn' : 'pill pillOff'}>
+                      {String(effective)}
+                    </span>
+                  </div>
+                  <div role="cell">
+                    <label className="switch">
+                      <input
+                        type="checkbox"
+                        checked={effective}
+                        disabled={!canWriteFlags}
+                        onChange={(e) => {
+                          if (!canWriteFlags) return;
+                          setOverride(key, e.target.checked);
+                        }}
+                        aria-label={`Toggle ${key}`}
+                      />
+                      <span className="switchTrack" />
+                    </label>
+                    <button
+                      className="miniButton"
+                      type="button"
+                      onClick={() => setOverride(key, undefined)}
+                      disabled={!canWriteFlags || override === undefined}
+                    >
+                      Clear
+                    </button>
+                  </div>
                 </div>
-                <div role="cell">{String(remote)}</div>
-                <div role="cell">{override === undefined ? '—' : String(override)}</div>
-                <div role="cell">
-                  <span className={effective ? 'pill pillOn' : 'pill pillOff'}>
-                    {String(effective)}
-                  </span>
-                </div>
-                <div role="cell">
-                  <label className="switch">
-                    <input
-                      type="checkbox"
-                      checked={effective}
-                      onChange={(e) => setOverride(key, e.target.checked)}
-                      aria-label={`Toggle ${key}`}
-                    />
-                    <span className="switchTrack" />
-                  </label>
-                  <button
-                    className="miniButton"
-                    type="button"
-                    onClick={() => setOverride(key, undefined)}
-                    disabled={override === undefined}
-                  >
-                    Clear
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
     </>
   );
 }
