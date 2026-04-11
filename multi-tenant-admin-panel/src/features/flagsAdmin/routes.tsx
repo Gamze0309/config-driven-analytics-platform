@@ -1,10 +1,9 @@
 import type { AppRouteDefinition } from '../../app/router/routeTypes';
-import type { ComponentType } from 'react';
-import { createLazyRouteElement } from '../../app/router/lazyRouteElement';
+import { createLazyRouteElement, type RouteComponent } from '../../app/router/lazyRouteElement';
 
 const flagsAdminElement = createLazyRouteElement(() =>
   import('./pages/FlagsAdminPage').then((m) => ({
-    default: m.FlagsAdminPage as ComponentType<any>,
+    default: m.FlagsAdminPage as RouteComponent,
   })),
 );
 

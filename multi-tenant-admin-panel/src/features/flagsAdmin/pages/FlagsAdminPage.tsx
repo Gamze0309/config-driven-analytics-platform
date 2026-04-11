@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useTenant } from '../../../core/tenant/TenantContext';
+import { useTenant } from '../../../core/tenant/tenantContext';
 import { queryKeys } from '../../../core/cache/queryKeys';
 import type { FeatureKey } from '../../../core/flags/types';
 import { DEFAULT_FLAGS } from '../../../core/flags/defaults';

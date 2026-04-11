@@ -1,9 +1,9 @@
 import type { PropsWithChildren } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { RoleProvider } from '../../core/auth/RoleContext';
 import { queryClient } from '../../core/cache/queryClient';
-import { FlagsProvider } from '../../core/flags/FlagsContext';
-import { TenantProvider } from '../../core/tenant/TenantContext';
+import { RoleProvider } from '../../core/auth/RoleProvider';
+import { FlagsProvider } from '../../core/flags/FlagsProvider';
+import { TenantProvider } from '../../core/tenant/TenantProvider';
 
 export function AppProviders({ children }: PropsWithChildren) {
   return (

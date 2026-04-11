@@ -1,12 +1,7 @@
-import {
-  createContext,
-  useContext,
-  useMemo,
-  useReducer,
-  type PropsWithChildren,
-} from 'react';
+import { useMemo, useReducer, type PropsWithChildren } from 'react';
 import { getRole, ROLES } from './roles';
-import type { Role, RoleId, User } from './types';
+import type { RoleId, User } from './types';
+import { RoleContext, type RoleState } from './roleContext';
 
 type RoleModel = {
   roleId: RoleId;
@@ -22,15 +17,6 @@ function roleReducer(state: RoleModel, action: RoleAction): RoleModel {
       return state;
   }
 }
-
-export type RoleState = {
-  user: User;
-  role: Role;
-  setRoleId: (roleId: RoleId) => void;
-  availableRoles: { id: RoleId; name: string }[];
-};
-
-const RoleContext = createContext<RoleState | null>(null);
 
 export function RoleProvider({ children }: PropsWithChildren) {
   const [model, dispatch] = useReducer(roleReducer, { roleId: 'admin' });
@@ -57,10 +43,4 @@ export function RoleProvider({ children }: PropsWithChildren) {
   }, [user, role, availableRoles]);
 
   return <RoleContext.Provider value={value}>{children}</RoleContext.Provider>;
-}
-
-export function useRole(): RoleState {
-  const ctx = useContext(RoleContext);
-  if (!ctx) throw new Error('useRole must be used within RoleProvider');
-  return ctx;
 }

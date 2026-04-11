@@ -1,6 +1,6 @@
 import type { FeatureFlags, FeatureKey } from '../flags/types';
-import { fetchRemoteFlagsForTenant, updateRemoteFlagForTenant } from '../flags/mockRemote';
 import type { TenantId } from '../tenant/types';
+import { httpClient } from './httpClient';
 
 export type GetFlagsResponse = {
   flags: FeatureFlags | null;
@@ -17,12 +17,17 @@ export type UpdateFlagResponse = {
 
 export const flagsApi = {
   getForTenant: async (tenantId: TenantId): Promise<GetFlagsResponse> => {
-    const flags = await fetchRemoteFlagsForTenant(tenantId);
-    return { flags };
+    return httpClient.request<GetFlagsResponse>({
+      path: `/tenants/${tenantId}/flags`,
+      method: 'GET',
+    });
   },
 
   updateForTenant: async (tenantId: TenantId, update: UpdateFlagRequest): Promise<UpdateFlagResponse> => {
-    const flags = await updateRemoteFlagForTenant(tenantId, update.key, update.enabled);
-    return { flags };
+    return httpClient.request<UpdateFlagResponse>({
+      path: `/tenants/${tenantId}/flags`,
+      method: 'PATCH',
+      body: update,
+    });
   },
 };

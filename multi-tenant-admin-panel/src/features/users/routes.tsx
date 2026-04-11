@@ -1,14 +1,13 @@
 import type { AppRouteDefinition } from '../../app/router/routeTypes';
-import type { ComponentType } from 'react';
-import { createLazyRouteElement } from '../../app/router/lazyRouteElement';
+import { createLazyRouteElement, type RouteComponent } from '../../app/router/lazyRouteElement';
 
 const usersElement = createLazyRouteElement(() =>
-  import('./pages/UsersPage').then((m) => ({ default: m.UsersPage as ComponentType<any> })),
+  import('./pages/UsersPage').then((m) => ({ default: m.UsersPage as RouteComponent })),
 );
 
 const userDetailElement = createLazyRouteElement(() =>
   import('./pages/UsersDetailPage').then((m) => ({
-    default: m.UsersDetailPage as ComponentType<any>,
+    default: m.UsersDetailPage as RouteComponent,
   })),
 );
 

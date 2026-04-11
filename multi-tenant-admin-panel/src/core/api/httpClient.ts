@@ -1,4 +1,5 @@
 import { AppError } from './errors';
+import { createMockTransport } from './mockTransport';
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
@@ -7,6 +8,13 @@ export type HttpClientConfig = {
   timeoutMs?: number;
   getAuthToken?: () => string | undefined;
   getTenantId?: () => string | undefined;
+  transport?: (req: {
+    path: string;
+    method: HttpMethod;
+    headers: Record<string, string>;
+    body?: unknown;
+    signal: AbortSignal;
+  }) => Promise<Response>;
 };
 
 export type RequestOptions = {
@@ -93,12 +101,14 @@ export function createHttpClient(config: HttpClientConfig = {}) {
       : controller.signal;
 
     try {
-      const res = await fetch(url, {
-        method,
-        headers,
-        body,
-        signal,
-      });
+      const res = config.transport
+        ? await config.transport({ path: options.path, method, headers, body: options.body, signal })
+        : await fetch(url, {
+            method,
+            headers,
+            body,
+            signal,
+          });
 
       if (!res.ok) {
         const details = await safeParseJson(res);
@@ -135,7 +145,7 @@ export function createHttpClient(config: HttpClientConfig = {}) {
   return { request };
 }
 
-export const httpClient = createHttpClient();
+export const httpClient = createHttpClient({ transport: createMockTransport() });
 
 class AbortSignalAny {
   readonly signal: AbortSignal;

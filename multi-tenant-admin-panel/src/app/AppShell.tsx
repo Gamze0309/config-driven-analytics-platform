@@ -1,7 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { useTenant } from '../core/tenant/TenantContext';
-import { useRole } from '../core/auth/RoleContext';
-import { useFlags } from '../core/flags/FlagsContext';
+import { useTenant } from '../core/tenant/tenantContext';
+import { useRole } from '../core/auth/roleContext';
+import { useFlags } from '../core/flags/flagsContext';
 import { canAccessRoute } from './router/routeAccess';
 import { featureRoutes } from './router/routeRegistry';
 import './shell.css';
@@ -9,7 +9,7 @@ import './shell.css';
 export function AppShell() {
   const { tenantId, setTenantId, availableTenants } = useTenant();
   const { role, setRoleId, availableRoles } = useRole();
-  const { effectiveFlags } = useFlags();
+  const { flags } = useFlags();
 
   const visibleNav = featureRoutes
     .filter((r) => r.nav)
@@ -17,7 +17,7 @@ export function AppShell() {
       canAccessRoute(r.meta, {
         tenantId,
         permissions: role.permissions,
-        flags: effectiveFlags,
+        flags,
       }),
     )
     .slice()

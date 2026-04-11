@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { useTenant } from '../../../core/tenant/TenantContext';
+import { useTenant } from '../../../core/tenant/tenantContext';
 import { useUserQuery } from '../queries/useUserQuery';
 
 export function UsersDetailPage() {

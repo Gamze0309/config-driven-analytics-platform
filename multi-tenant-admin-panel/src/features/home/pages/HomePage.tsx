@@ -1,6 +1,6 @@
-import { useTenant } from '../../../core/tenant/TenantContext';
-import { useRole } from '../../../core/auth/RoleContext';
-import { useFlags } from '../../../core/flags/FlagsContext';
+import { useTenant } from '../../../core/tenant/tenantContext';
+import { useRole } from '../../../core/auth/roleContext';
+import { useFlags } from '../../../core/flags/flagsContext';
 import type { FeatureKey } from '../../../core/flags/types';
 
 const FEATURE_LABELS: Record<FeatureKey, string> = {
@@ -13,7 +13,7 @@ const FEATURE_LABELS: Record<FeatureKey, string> = {
 export function HomePage() {
   const { tenantId } = useTenant();
   const { role, user } = useRole();
-  const { remoteFlags, effectiveFlags } = useFlags();
+  const { flags } = useFlags();
 
   const canReadFlags = role.permissions.includes('flags:read');
 
@@ -49,16 +49,14 @@ export function HomePage() {
             <h2 className="cardTitle">Feature Flags</h2>
           </div>
 
-          <div className="flagsTable cols3" role="table" aria-label="Feature flags">
+          <div className="flagsTable cols2" role="table" aria-label="Feature flags">
             <div className="flagsHeader" role="row">
               <div role="columnheader">Feature</div>
-              <div role="columnheader">Remote</div>
-              <div role="columnheader">Effective</div>
+              <div role="columnheader">Enabled</div>
             </div>
 
-            {(Object.keys(effectiveFlags) as FeatureKey[]).map((key) => {
-              const remote = remoteFlags[key];
-              const effective = effectiveFlags[key];
+            {(Object.keys(flags) as FeatureKey[]).map((key) => {
+              const enabled = flags[key];
 
               return (
                 <div className="flagsRow" role="row" key={key}>
@@ -66,10 +64,9 @@ export function HomePage() {
                     <div className="flagName">{FEATURE_LABELS[key]}</div>
                     <div className="flagKey">{key}</div>
                   </div>
-                  <div role="cell">{String(remote)}</div>
                   <div role="cell">
-                    <span className={effective ? 'pill pillOn' : 'pill pillOff'}>
-                      {String(effective)}
+                    <span className={enabled ? 'pill pillOn' : 'pill pillOff'}>
+                      {String(enabled)}
                     </span>
                   </div>
                 </div>

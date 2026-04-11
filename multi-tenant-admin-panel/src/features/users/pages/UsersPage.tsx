@@ -1,5 +1,5 @@
-import { useTenant } from '../../../core/tenant/TenantContext';
-import { useRole } from '../../../core/auth/RoleContext';
+import { useTenant } from '../../../core/tenant/tenantContext';
+import { useRole } from '../../../core/auth/roleContext';
 import { Link } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../../../core/cache/queryKeys';

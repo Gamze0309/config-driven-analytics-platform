@@ -1,12 +1,7 @@
-import {
-  createContext,
-  useContext,
-  useMemo,
-  useReducer,
-  type PropsWithChildren,
-} from 'react';
+import { useMemo, useReducer, type PropsWithChildren } from 'react';
 import { TENANTS } from './tenants';
 import type { TenantId } from './types';
+import { TenantContext, type TenantState } from './tenantContext';
 
 type TenantModel = {
   tenantId: TenantId;
@@ -22,14 +17,6 @@ function tenantReducer(state: TenantModel, action: TenantAction): TenantModel {
       return state;
   }
 }
-
-export type TenantState = {
-  tenantId: TenantId;
-  setTenantId: (tenantId: TenantId) => void;
-  availableTenants: { id: TenantId; name: string }[];
-};
-
-const TenantContext = createContext<TenantState | null>(null);
 
 export function TenantProvider({ children }: PropsWithChildren) {
   const [model, dispatch] = useReducer(tenantReducer, { tenantId: TENANTS[0]?.id ?? 'acme' });
@@ -48,10 +35,4 @@ export function TenantProvider({ children }: PropsWithChildren) {
   }, [model.tenantId, availableTenants]);
 
   return <TenantContext.Provider value={value}>{children}</TenantContext.Provider>;
-}
-
-export function useTenant(): TenantState {
-  const ctx = useContext(TenantContext);
-  if (!ctx) throw new Error('useTenant must be used within TenantProvider');
-  return ctx;
 }

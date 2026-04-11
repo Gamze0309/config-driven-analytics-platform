@@ -66,6 +66,11 @@
   grid-template-columns: 2fr 1fr 1fr;
 }
 
+.flagsTable.cols2 .flagsHeader,
+.flagsTable.cols2 .flagsRow {
+  grid-template-columns: 2fr 1fr;
+}
+
 .flagsTable.cols4 .flagsHeader,
 .flagsTable.cols4 .flagsRow {
   grid-template-columns: 2fr 0.8fr 1.2fr 0.9fr;
