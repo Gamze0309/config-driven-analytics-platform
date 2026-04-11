@@ -3,7 +3,7 @@ import { useTenant } from '../core/tenant/TenantContext';
 import { useRole } from '../core/auth/RoleContext';
 import { useFlags } from '../core/flags/FlagsContext';
 import { canAccessRoute } from './router/routeAccess';
-import { primaryNav } from './router/routeRegistry';
+import { featureRoutes } from './router/routeRegistry';
 import './shell.css';
 
 export function AppShell() {
@@ -11,13 +11,17 @@ export function AppShell() {
   const { role, setRoleId, availableRoles } = useRole();
   const { effectiveFlags } = useFlags();
 
-  const visibleNav = primaryNav.filter((item) =>
-    canAccessRoute(item.meta, {
-      tenantId,
-      permissions: role.permissions,
-      flags: effectiveFlags,
-    }),
-  );
+  const visibleNav = featureRoutes
+    .filter((r) => r.nav)
+    .filter((r) =>
+      canAccessRoute(r.meta, {
+        tenantId,
+        permissions: role.permissions,
+        flags: effectiveFlags,
+      }),
+    )
+    .slice()
+    .sort((a, b) => (a.nav?.order ?? 0) - (b.nav?.order ?? 0));
 
   return (
     <div className="shell">
@@ -60,13 +64,13 @@ export function AppShell() {
       </header>
 
       <nav className="shellNav" aria-label="Primary">
-        {visibleNav.map((item) => (
+        {visibleNav.map((r) => (
           <NavLink
-            key={item.to}
+            key={r.id}
             className={({ isActive }) => (isActive ? 'navLink navLinkActive' : 'navLink')}
-            to={item.to}
+            to={r.path === '' ? '/' : `/${r.path}`}
           >
-            {item.label}
+            {r.nav?.label}
           </NavLink>
         ))}
       </nav>

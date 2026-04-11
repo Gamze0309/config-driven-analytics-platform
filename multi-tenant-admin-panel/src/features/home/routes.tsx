@@ -6,5 +6,9 @@ export const homeRoutes: AppRouteDefinition[] = [
     id: 'home',
     path: '',
     element: <HomePage />,
+    nav: {
+      label: 'Home',
+      order: 0,
+    },
   },
 ];

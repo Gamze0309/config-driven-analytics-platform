@@ -11,5 +11,9 @@ export const usersRoutes: AppRouteDefinition[] = [
       requiredFlags: ['users'],
       tenantScoped: true,
     },
+    nav: {
+      label: 'Users',
+      order: 10,
+    },
   },
 ];

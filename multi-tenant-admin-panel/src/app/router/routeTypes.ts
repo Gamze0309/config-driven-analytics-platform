@@ -13,4 +13,8 @@ export type AppRouteDefinition = {
   path: string;
   element: ReactNode;
   meta?: RouteMeta;
+  nav?: {
+    label: string;
+    order?: number;
+  };
 };
