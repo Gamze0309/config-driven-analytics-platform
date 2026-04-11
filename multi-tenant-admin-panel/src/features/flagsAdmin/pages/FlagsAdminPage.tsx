@@ -3,10 +3,7 @@ import { useTenant } from '../../../core/tenant/TenantContext';
 import { queryKeys } from '../../../core/cache/queryKeys';
 import type { FeatureKey } from '../../../core/flags/types';
 import { DEFAULT_FLAGS } from '../../../core/flags/defaults';
-import {
-  fetchRemoteFlagsForTenant,
-  updateRemoteFlagForTenant,
-} from '../../../core/flags/mockRemote';
+import { flagsApi } from '../../../core/api/flagsApi';
 
 const FEATURE_LABELS: Record<FeatureKey, string> = {
   users: 'Users module',
@@ -22,14 +19,14 @@ export function FlagsAdminPage() {
   const flagsQuery = useQuery({
     queryKey: queryKeys.tenant(tenantId).flags(),
     queryFn: async () => {
-      const remote = await fetchRemoteFlagsForTenant(tenantId);
-      return remote ?? DEFAULT_FLAGS;
+      const remote = await flagsApi.getForTenant(tenantId);
+      return remote.flags ?? DEFAULT_FLAGS;
     },
   });
 
   const updateFlagMutation = useMutation({
     mutationFn: async (vars: { key: FeatureKey; value: boolean }) => {
-      await updateRemoteFlagForTenant(tenantId, vars.key, vars.value);
+      await flagsApi.updateForTenant(tenantId, { key: vars.key, enabled: vars.value });
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: queryKeys.tenant(tenantId).flags() });
