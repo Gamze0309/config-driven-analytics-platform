@@ -2,7 +2,9 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
+  useRef,
   useState,
   type PropsWithChildren,
 } from 'react';
@@ -38,6 +40,15 @@ export function FlagsProvider({ children }: PropsWithChildren) {
   }, [tenantId]);
 
   const [localOverrides, setLocalOverrides] = useState<Partial<FeatureFlags>>({});
+
+  const previousTenantIdRef = useRef(tenantId);
+
+  useEffect(() => {
+    if (previousTenantIdRef.current !== tenantId) {
+      setLocalOverrides({});
+      previousTenantIdRef.current = tenantId;
+    }
+  }, [tenantId]);
 
   const setOverride = useCallback((key: FeatureKey, value: boolean | undefined) => {
     setLocalOverrides((prev) => {

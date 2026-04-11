@@ -1,11 +1,23 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { useTenant } from '../core/tenant/TenantContext';
 import { useRole } from '../core/auth/RoleContext';
+import { useFlags } from '../core/flags/FlagsContext';
+import { canAccessRoute } from './router/routeAccess';
+import { primaryNav } from './router/routeRegistry';
 import './shell.css';
 
 export function AppShell() {
   const { tenantId, setTenantId, availableTenants } = useTenant();
   const { role, setRoleId, availableRoles } = useRole();
+  const { effectiveFlags } = useFlags();
+
+  const visibleNav = primaryNav.filter((item) =>
+    canAccessRoute(item.meta, {
+      tenantId,
+      permissions: role.permissions,
+      flags: effectiveFlags,
+    }),
+  );
 
   return (
     <div className="shell">
@@ -48,12 +60,15 @@ export function AppShell() {
       </header>
 
       <nav className="shellNav" aria-label="Primary">
-        <NavLink className={({ isActive }) => (isActive ? 'navLink navLinkActive' : 'navLink')} to="/">
-          Home
-        </NavLink>
-        <NavLink className={({ isActive }) => (isActive ? 'navLink navLinkActive' : 'navLink')} to="/users">
-          Users
-        </NavLink>
+        {visibleNav.map((item) => (
+          <NavLink
+            key={item.to}
+            className={({ isActive }) => (isActive ? 'navLink navLinkActive' : 'navLink')}
+            to={item.to}
+          >
+            {item.label}
+          </NavLink>
+        ))}
       </nav>
 
       <main className="shellMain">

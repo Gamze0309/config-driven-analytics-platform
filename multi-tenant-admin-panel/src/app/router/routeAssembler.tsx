@@ -1,19 +1,30 @@
 import type { RouteObject } from 'react-router-dom';
 import { AppShell } from '../AppShell';
-import { homeRoutes } from '../../features/home/routes';
-import { usersRoutes } from '../../features/users/routes';
+import { RouteGate } from './guards/RouteGate';
+import { featureRoutes } from './routeRegistry';
 
 export function assembleRoutes(): RouteObject[] {
-  const featureRoutes = [...homeRoutes, ...usersRoutes];
-
   return [
     {
       path: '/',
       element: <AppShell />,
-      children: featureRoutes.map((r) => ({
-        path: r.path,
-        element: r.element,
-      })),
+      children: featureRoutes.map((r) => {
+        const guardedElement = <RouteGate meta={r.meta}>{r.element}</RouteGate>;
+
+        if (r.path === '') {
+          return {
+            index: true,
+            element: guardedElement,
+            handle: { id: r.id, meta: r.meta },
+          };
+        }
+
+        return {
+          path: r.path,
+          element: guardedElement,
+          handle: { id: r.id, meta: r.meta },
+        };
+      }),
     },
   ];
 }
