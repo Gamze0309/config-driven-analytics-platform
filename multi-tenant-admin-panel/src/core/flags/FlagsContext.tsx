@@ -8,9 +8,11 @@ import {
   useState,
   type PropsWithChildren,
 } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useTenant } from '../tenant/TenantContext';
+import { queryKeys } from '../cache/queryKeys';
 import { DEFAULT_FLAGS } from './defaults';
-import { REMOTE_FLAGS_BY_TENANT } from './mockRemote';
+import { fetchRemoteFlagsForTenant } from './mockRemote';
 import type { FeatureFlags, FeatureKey } from './types';
 
 export type FlagsState = {
@@ -35,9 +37,15 @@ function computeEffectiveFlags(remoteFlags: FeatureFlags, localOverrides: Partia
 export function FlagsProvider({ children }: PropsWithChildren) {
   const { tenantId } = useTenant();
 
-  const remoteFlags = useMemo<FeatureFlags>(() => {
-    return REMOTE_FLAGS_BY_TENANT[tenantId] ?? DEFAULT_FLAGS;
-  }, [tenantId]);
+  const flagsQuery = useQuery({
+    queryKey: queryKeys.tenant(tenantId).flags(),
+    queryFn: async () => {
+      const remote = await fetchRemoteFlagsForTenant(tenantId);
+      return remote ?? DEFAULT_FLAGS;
+    },
+  });
+
+  const remoteFlags = flagsQuery.data ?? DEFAULT_FLAGS;
 
   const [localOverrides, setLocalOverrides] = useState<Partial<FeatureFlags>>({});
 

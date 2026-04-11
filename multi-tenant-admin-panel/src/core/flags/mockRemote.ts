@@ -5,3 +5,7 @@ export const REMOTE_FLAGS_BY_TENANT: Record<string, FeatureFlags> = {
   globex: { users: false, reports: true, billing: false, flagsAdmin: true },
   initech: { users: true, reports: false, billing: false, flagsAdmin: false },
 };
+
+export async function fetchRemoteFlagsForTenant(tenantId: string): Promise<FeatureFlags | null> {
+  return REMOTE_FLAGS_BY_TENANT[tenantId] ?? null;
+}
