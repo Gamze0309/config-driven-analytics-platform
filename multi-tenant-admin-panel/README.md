@@ -1,73 +1,74 @@
-# React + TypeScript + Vite
+# Multi-Tenant Admin Panel (Demo)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Small, interview-friendly frontend demo focused on scalable patterns:
+multi-tenant context, RBAC, feature flags, config-driven routing, API abstraction, caching, and error boundaries.
 
-Currently, two official plugins are available:
+## Run
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Quality checks:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run lint
+npm run build
 ```
+
+## What this demonstrates
+
+- **Multi-tenant context**: Tenant selector affects all tenant-scoped data.
+- **RBAC**: Route + UI actions gated via permissions.
+- **Feature flags**: Tenant-scoped flags; used for route gating and UI visibility.
+- **Config-driven routing & nav**: Feature routes are declared in feature folders and assembled centrally.
+- **React Query (TanStack Query)**: Tenant-scoped query keys + invalidation after mutations.
+- **API abstraction**: UI calls domain APIs (`flagsApi`, `usersApi`), not fetch.
+- **Error boundaries**: Route-level boundary protects feature pages.
+
+## Key flows
+
+### Flags
+
+- Read flags anywhere (Home is **read-only**).
+- Write flags only from **Flags Admin** (permission `flags:write` + feature flag `flagsAdmin`).
+
+### Users
+
+- Users list/detail is tenant-scoped.
+- Create/Delete is gated by `users:write`.
+
+## Architecture map (where to look)
+
+- Providers: `src/app/providers/AppProviders.tsx`
+- Route assembly & access policy:
+  - `src/app/router/routeRegistry.ts`
+  - `src/app/router/routeAssembler.tsx`
+  - `src/app/router/routeAccess.ts`
+  - `src/app/router/guards/RouteGate.tsx`
+- Contexts:
+  - Tenant: `src/core/tenant/tenantContext.ts` + `src/core/tenant/TenantProvider.tsx`
+  - Role/RBAC: `src/core/auth/roleContext.ts` + `src/core/auth/RoleProvider.tsx`
+  - Flags: `src/core/flags/flagsContext.ts` + `src/core/flags/FlagsProvider.tsx`
+- Caching:
+  - Query client + keys: `src/core/cache/queryClient.ts`, `src/core/cache/queryKeys.ts`
+
+## Mock backend (important)
+
+There is no real backend in this repo.
+
+- Domain API calls go through `httpClient`.
+- `httpClient` is configured with an in-memory **mock transport** that responds to a small set of endpoints.
+- The transport delegates to simple in-memory stores under feature/core mock modules.
+
+Why this approach:
+- Keeps the architecture close to production (UI → domain API → http client → transport).
+- When a real backend exists, swap the transport to `fetch` without rewriting UI/components.
+
+## Trade-offs / intentional simplifications
+
+- **Auth**: demo-only role switcher (no JWT/SSO). Backend enforcement is out of scope.
+- **Tenant selection**: dropdown selector (prod might prefer URL/subdomain + deep links).
+- **Flags**: no local overrides (single source of truth is remote flags).
+- **API surface**: only the endpoints needed by the demo are implemented in the mock transport.
