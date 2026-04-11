@@ -6,5 +6,6 @@ export const queryKeys = {
     all: () => ['tenant', tenantId] as const,
     flags: () => ['tenant', tenantId, 'flags'] as const,
     users: () => ['tenant', tenantId, 'users'] as const,
+    user: (userId: string) => ['tenant', tenantId, 'users', userId] as const,
   }),
 };

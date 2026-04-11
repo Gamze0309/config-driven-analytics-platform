@@ -6,6 +6,12 @@ const usersElement = createLazyRouteElement(() =>
   import('./pages/UsersPage').then((m) => ({ default: m.UsersPage as ComponentType<any> })),
 );
 
+const userDetailElement = createLazyRouteElement(() =>
+  import('./pages/UsersDetailPage').then((m) => ({
+    default: m.UsersDetailPage as ComponentType<any>,
+  })),
+);
+
 export const usersRoutes: AppRouteDefinition[] = [
   {
     id: 'users',
@@ -19,6 +25,16 @@ export const usersRoutes: AppRouteDefinition[] = [
     nav: {
       label: 'Users',
       order: 10,
+    },
+  },
+  {
+    id: 'userDetail',
+    path: 'users/:userId',
+    element: userDetailElement,
+    meta: {
+      requiredPermissions: ['users:read'],
+      requiredFlags: ['users'],
+      tenantScoped: true,
     },
   },
 ];
