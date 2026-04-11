@@ -1,18 +1,16 @@
 import type { AppRouteDefinition } from '../../app/router/routeTypes';
-import { lazy, Suspense } from 'react';
-import { RouteLoading } from '../../app/router/pages/RouteLoading';
+import type { ComponentType } from 'react';
+import { createLazyRouteElement } from '../../app/router/lazyRouteElement';
 
-const HomePage = lazy(() => import('./pages/HomePage').then((m) => ({ default: m.HomePage })));
+const homeElement = createLazyRouteElement(() =>
+  import('./pages/HomePage').then((m) => ({ default: m.HomePage as ComponentType<any> })),
+);
 
 export const homeRoutes: AppRouteDefinition[] = [
   {
     id: 'home',
     path: '',
-    element: (
-      <Suspense fallback={<RouteLoading />}>
-        <HomePage />
-      </Suspense>
-    ),
+    element: homeElement,
     nav: {
       label: 'Home',
       order: 0,

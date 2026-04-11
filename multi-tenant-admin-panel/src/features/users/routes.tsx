@@ -1,18 +1,16 @@
 import type { AppRouteDefinition } from '../../app/router/routeTypes';
-import { lazy, Suspense } from 'react';
-import { RouteLoading } from '../../app/router/pages/RouteLoading';
+import type { ComponentType } from 'react';
+import { createLazyRouteElement } from '../../app/router/lazyRouteElement';
 
-const UsersPage = lazy(() => import('./pages/UsersPage').then((m) => ({ default: m.UsersPage })));
+const usersElement = createLazyRouteElement(() =>
+  import('./pages/UsersPage').then((m) => ({ default: m.UsersPage as ComponentType<any> })),
+);
 
 export const usersRoutes: AppRouteDefinition[] = [
   {
     id: 'users',
     path: 'users',
-    element: (
-      <Suspense fallback={<RouteLoading />}>
-        <UsersPage />
-      </Suspense>
-    ),
+    element: usersElement,
     meta: {
       requiredPermissions: ['users:read'],
       requiredFlags: ['users'],
