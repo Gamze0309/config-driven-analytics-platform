@@ -1,0 +1,14 @@
+.errorBoundary {
+  /* Uses shared .card visuals from src/styles/ui.css */
+}
+
+.errorBoundaryActions {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.errorBoundaryDetails {
+  margin-top: 12px;
+}

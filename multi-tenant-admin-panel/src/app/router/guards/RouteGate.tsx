@@ -5,6 +5,7 @@ import { useFlags } from '../../../core/flags/FlagsContext';
 import type { RouteMeta } from '../routeTypes';
 import { evaluateRouteAccess } from '../routeAccess';
 import { ForbiddenPage } from '../pages/ForbiddenPage';
+import { ErrorBoundary } from '../../../shared/errors/ErrorBoundary';
 
 export function RouteGate(props: { meta?: RouteMeta; children: ReactNode }) {
   const { tenantId } = useTenant();
@@ -26,5 +27,5 @@ export function RouteGate(props: { meta?: RouteMeta; children: ReactNode }) {
     );
   }
 
-  return props.children;
+  return <ErrorBoundary name="Route">{props.children}</ErrorBoundary>;
 }
