@@ -18,6 +18,11 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
+  margin-bottom: 12px;
+}
+
+.cardHeaderRow .cardTitle {
+  margin-bottom: 0;
 }
 
 .kv {
@@ -115,6 +120,11 @@
 
 .miniButton {
   margin-left: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 30px;
   font: inherit;
   font-size: 12px;
   color: var(--text-h);
@@ -123,6 +133,12 @@
   border-radius: 8px;
   padding: 6px 8px;
   cursor: pointer;
+  text-decoration: none;
+}
+
+.miniButton:link,
+.miniButton:visited {
+  color: var(--text-h);
 }
 
 .miniButton:disabled {
