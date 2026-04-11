@@ -39,25 +39,18 @@ A collection of **4 technical projects** showcasing advanced frontend engineerin
 
 ---
 
-### 3. Performance Profiling Tools 🚧
+### 3. Frontend Scaling Architecture ✅
 
-**Metrics & Monitoring**
+**Multi-Tenant Admin Panel (System Design & Patterns)**
 
-- Custom performance hooks
-- Runtime metrics collection
-- Bottleneck identification
-- Real User Monitoring (RUM)
+- Config-driven routing + nav assembly
+- Multi-tenant context + tenant-scoped server state
+- RBAC (route + UI action gating)
+- Feature flags (read-only on Home, writes via Flags Admin)
+- TanStack Query caching + invalidation
+- API abstraction (`flagsApi` → `httpClient` → mock transport)
 
----
-
-### 4. Frontend Scaling Architecture 🚧
-
-**System Design & Patterns**
-
-- State management patterns
-- Data fetching strategies
-- Code splitting and caching
-- Scalable frontend systems
+**[View Project](multi-tenant-admin-panel/)**
 
 ---
 
@@ -78,6 +71,14 @@ cd react-rendering-internals
 npm install
 npm run build
 npm run preview
+```
+
+Multi-Tenant Admin Panel:
+
+```bash
+cd multi-tenant-admin-panel
+npm install
+npm run dev
 ```
 
 ## Tech Stack
