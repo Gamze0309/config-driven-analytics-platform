@@ -35,3 +35,18 @@ export async function deleteRemoteUserById(tenantId: TenantId, userId: string): 
   REMOTE_USERS_BY_TENANT[tenantId] = next;
   return true;
 }
+
+export async function createRemoteUser(
+  tenantId: TenantId,
+  user: Omit<UserDto, 'id'> & { id?: string },
+): Promise<UserDto> {
+  const current = REMOTE_USERS_BY_TENANT[tenantId] ?? [];
+  const created: UserDto = {
+    id: user.id ?? `u-${tenantId}-${Date.now()}`,
+    displayName: user.displayName,
+    email: user.email,
+  };
+
+  REMOTE_USERS_BY_TENANT[tenantId] = [created, ...current];
+  return created;
+}

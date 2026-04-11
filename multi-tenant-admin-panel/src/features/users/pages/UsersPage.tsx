@@ -27,11 +27,31 @@ export function UsersPage() {
     },
   });
 
+  const createUserMutation = useMutation({
+    mutationFn: async () => {
+      const suffix = new Date().toISOString().slice(11, 19).replaceAll(':', '');
+      const res = await usersApi.create({
+        tenantId,
+        displayName: `New User ${suffix}`,
+        email: `new.user.${suffix}@${tenantId}.test`,
+      });
+      return res.user;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: queryKeys.tenant(tenantId).users() });
+    },
+  });
+
   return (
     <section className="card">
       <div className="cardHeaderRow">
         <h2 className="cardTitle">Users</h2>
-        <button className="linkButton" type="button" disabled={!canWriteUsers}>
+        <button
+          className="linkButton"
+          type="button"
+          disabled={!canWriteUsers || createUserMutation.isPending}
+          onClick={() => createUserMutation.mutate()}
+        >
           Create user
         </button>
       </div>
@@ -42,6 +62,8 @@ export function UsersPage() {
         <p>Failed to load users.</p>
       ) : deleteUserMutation.isError ? (
         <p>Failed to delete user.</p>
+      ) : createUserMutation.isError ? (
+        <p>Failed to create user.</p>
       ) : users.length === 0 ? (
         <p>No users found for tenant {tenantId}.</p>
       ) : (
