@@ -1,6 +1,6 @@
 # Config-Driven Analytics Platform
 
-A collection of **4 technical projects** showcasing advanced frontend engineering expertise.
+A collection of **3 technical projects** showcasing advanced frontend engineering expertise.
 
 ---
 
